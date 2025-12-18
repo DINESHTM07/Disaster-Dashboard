@@ -126,6 +126,7 @@ const STORAGE_KEYS = {
   NOTIFICATIONS: "disasterwatch_notifications", 
   FILTERS: "disasterwatch_filters", 
   LAST_VISIT: "disasterwatch_last_visit", 
+  LAST_INIT_ERROR: "disasterwatch_last_init_error"
 };
 
 

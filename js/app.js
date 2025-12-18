@@ -100,7 +100,10 @@ async function initApp() {
     debugLog('🚀 Initializing DisasterWatch...');
     PERFORMANCE.start('appInit');
     
+    let initTimedOut = false;
+
     const INIT_TIMEOUT = setTimeout(() => {
+        initTimedOut = true;
         debugError('⚠️ Initialization timeout');
         try {
             
@@ -115,7 +118,7 @@ async function initApp() {
 
         hideLoadingScreen();
         showToast('Initialization timeout. Some features may be unavailable.', 'warning');
-    }, 12000);
+    }, 18000); // extended timeout to reduce false positives on slow networks
     
     try {
         
@@ -144,6 +147,7 @@ async function initApp() {
 
         
         clearTimeout(INIT_TIMEOUT);
+        initTimedOut = false;
         
         
         checkAPIsStatus();
@@ -156,7 +160,24 @@ async function initApp() {
         
     } catch (error) {
         debugError('Failed to initialize app:', error);
-        showToast('Failed to initialize app. Please refresh.', 'error');
+
+        // Save last init error details for debugging (safe fallback)
+        try {
+            saveToStorage(STORAGE_KEYS.LAST_INIT_ERROR, {
+                message: error?.message || String(error),
+                stack: error?.stack || null,
+                time: Date.now(),
+                timedOut: initTimedOut
+            });
+        } catch (e) {
+            debugError('Failed to persist init error:', e);
+        }
+
+        // If the timeout already fired we already showed a warning toast; avoid showing a second failure message
+        if (!initTimedOut) {
+            showToast('Failed to initialize app. Please refresh.', 'error');
+        }
+
         clearTimeout(INIT_TIMEOUT);
         hideLoadingScreen();
     }
@@ -258,6 +279,23 @@ function loadSavedPreferences() {
     }
     
     debugLog('✅ Preferences loaded');
+
+    // Show small diagnostic if previous initialization failed (helps debugging mobile-only issues)
+    try {
+        const lastInitError = getFromStorage(STORAGE_KEYS.LAST_INIT_ERROR);
+        if (lastInitError) {
+            debugLog('Previous init error found', lastInitError);
+            if (DEBUG_MODE) {
+                if (lastInitError.timedOut) {
+                    showToast('Previous initialization timed out. Some features may be limited.', 'warning');
+                } else {
+                    showToast('Previous initialization failed on last run. Refresh if issues persist.', 'error');
+                }
+            }
+        }
+    } catch (e) {
+        debugError('Failed to check last init error:', e);
+    }
 }
 
 
