@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="description"
+      content="Real-time global disaster monitoring dashboard tracking earthquakes, weather alerts, and emergency notifications. Built with vanilla Javascript and  open APIs"
+    />
+    <meta
+      name="keywords"
+      content="earthquake tracker, disaster alerts, weather monitoring, real-time data, emergency notifications"
+    />
+    <meta name="author" content="DINESH SENTHILKUMAR" />
+    <meta name="robots" content="index, follow" />
+
+    <meta
+      property="og:title"
+      content="DisasterWatch - Real-Time Global Alert System"
+    />
+    <meta
+      property="og:description"
+      content="Monitor earthquakes and weather emergencies in real-time with interactive visualizations"
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://yourusername.github.io/disaster-dashboard"
+    />
+    <meta property="og:image" content="assets/images/hero-illustration.svg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="DisasterWatch Dashboard" />
+    <meta
+      name="twitter:description"
+      content="Real-time disaster monitoring system"
+    />
+    <meta name="twitter:image" content="assets/images/hero-illustration.svg" />
+    <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/favicon.svg" />
+
+    <title>DisasterWatch - Real-Time Global Disaster Monitoring</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <div id="loading-screen" class="loading-screen">
+      <div class="loading-content">
+        <div class="spinner"></div>
+        <h2 class="loading-text">Connecting to Global Networks...</h2>
+        <p class="loading-subtext">Fetching real-time disaster data</p>
+      </div>
+    </div>
+    <div id="load-error" class="load-error hidden" role="alert">
+      <div class="load-error-content container">
+          <p id="load-error-message">Failed to load data. Check your internet connection and try again.</p>
+          <div class="load-error-actions">
+              <button id="retry-load-btn" class="btn btn-primary btn-small">Retry</button>
+              <button id="use-cache-btn" class="btn btn-secondary btn-small">Use cached data</button>
+          </div>
+      </div>
+    </div>    <div id="app" class="hidden">
+
+      <header class="header" role="banner">
+        <div class="container">
+          <div class="header-content">
+            <div class="logo-section">
+              <div class="logo-icon">
+                <i class="fas fa-satellite-dish"></i>
+              </div>
+
+              <div class="logo-text">
+                <h1 class="logo-title">DisasterWatch</h1>
+                <p class="logo-tagline">Real-Time Global Monitoring</p>
+              </div>
+            </div>
+
+            <nav class="nav-links" aria-label="Main navigation">
+                <a href="#" class="nav-link">Overview</a>
+                <a href="#earthquake-heading" class="nav-link">Data</a>
+                <a href="contact.html" class="nav-link">About</a>
+            </nav>
+
+            <div class="header-actions">
+              <button
+                id="location-btn"
+                class="btn btn-primary"
+                aria-label="Get my location"
+                title="Use my current location"
+              >
+                <i class="fas fa-location-crosshairs"></i>
+                <span class="btn-text">My location</span>
+              </button>
+
+              <button id="theme-toggle" class="btn btn-icon" aria-label="Toggle dark mode" title="Switch theme">
+                <i class="fas fa-moon"></i>
+              </button>
+
+              <button id="refresh-btn" class="btn btn-icon" aria-label="Refresh data" title="Refresh earthquake data">
+                <i class="fas fa-arrows-rotate"></i>
+              </button>
+
+              <button id="notifications-btn" class="btn btn-icon" aria-label="Enable notifications" title="Enable browser notifications">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge hidden" id="notification-badge">3</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+
+      <main class="main-content" role="main">
+        <div class="container">
+
+            <section class="hero-section">
+                <div class="hero-inner">
+                    <div class="hero-text">
+                        <div class="hero-pretitle">Real-time Situational Awareness</div>
+                        <h1 class="hero-title">DisasterWatch — Monitor global emergencies in one place</h1>
+                        <p class="hero-subtitle">Track earthquakes, weather alerts, and get instant notifications with a clean, fast dashboard — built for responders and curious citizens alike.</p>
+                        <div class="hero-ctas">
+                            <button class="btn btn-primary btn-large" id="get-started">Get Started</button>
+                            <a class="btn btn-secondary btn-large" href="contact.html">Contact Us</a>
+                        </div>
+                    </div>
+                    <div class="hero-visual" aria-hidden="true">
+                        <img src="assets/images/hero-illustration.svg" alt="Abstract map and alert visualization" />
+                    </div>
+                </div>
+            </section>
+
+            <div id="alert-banner" class="alert-banner premium hidden" role="status" aria-live="polite" aria-atomic="true">
+                <div class="alert-accent" aria-hidden="true"></div>
+                <div class="alert-content">
+                    <div class="alert-icon"><i class="fas fa-triangle-exclamation"></i></div>
+
+                    <div class="alert-text">
+                        <div class="alert-title"><strong>High Magnitude Alert</strong> <span class="alert-severity">M6.5</span></div>
+                        <div class="alert-message" id="alert-message">Earthquake detected near California — check details below.</div>
+                    </div>
+
+                    <div class="alert-actions">
+                        <button id="view-alert-btn" class="btn btn-secondary btn-small">View</button>
+                        <button class="alert-close" aria-label="Close alert"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+            </div>  
+
+
+            <section class="stats-section" aria-labelledby="stats-heading">
+                <h2 id="stats-heading" class="visually-hidden">Dashboard Statistics</h2>
+
+                <div class="stats-grid">
+
+                    <article class="stat-card weather-card card-glass">
+                        <div class="card-header">
+                            <div class="card-icon weather-icon">
+                                <i class="fas fa-cloud-sun"></i>
+                            </div>
+                            <h3 class="card-title">Weather Alert</h3>
+                        </div> 
+
+                        <div class="card-body" id="weather-content">
+
+                            <div class="skeleton-loader">
+                                <div class="skeleton-line"></div>
+                                <div class="skeleton-line short"></div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer">
+                            <span class="card-location" id="weather-location">
+                                <i class="fas fa-location-dot"></i>Detecting location...
+                            </span>
+                        </div>
+                    </article>
+
+
+                    <article class="stat-card alerts-card card-glass">
+                        <div class="card-header">
+                            <div class="card-icon alerts-icon">
+                                <i  class="fas fa-bell"></i>
+                            </div>
+                            <h3 class="card-title">Active Alerts</h3>
+                        </div> 
+
+                        <div class="card-body">
+                            <div class="big-stat" id="alerts-count">
+                                <span class="stat-number">0</span>
+                                <span class="stat-label">Earthquakes</span>
+                            </div>
+                            <p class="stat-description">Magnitude 2.5+ in last 24 hours</p>
+                        </div>
+
+                        <div class="card-footer">
+                            <span class="card-meta">
+                                <i class="fas fa-clock"></i>
+                                <span id="last-update-time">Updated now</span>
+                            </span>
+                        </div>
+                    </article>
+
+                    <article class="stat-card status-card card-glass">
+                        <div class="card-header">
+                            <div class="card-icon status-icon">
+                                <i class="fas fa-heartbeat"></i>
+                            </div>
+                            <h3 class="card-title">System Status</h3>
+                        </div> 
+
+                        <div class="card-body">
+                            <div class="status-indicator" id="system-status">
+                                <span class="status-dot status-online"></span>
+                                <span class="status-text">All Systems Operational</span>
+                            </div>
+
+                            <div class="status-details">
+                                <div class="status-item">
+                                    <span class="status-label">USGS API</span>
+                                    <span class="status-value" id="api-status-usgs">
+                                        <i class="fas fa-check-circle"></i>Active
+                                    </span>
+                                </div>
+
+                                <div class="status-item">
+                                    <span class="status-label">Weather API</span>
+                                    <span class="status-value" id="api-status-weather">
+                                        <i class="fas fa-check-circle"></i>Active
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="stat-card magnitude-card card-glass">
+                        <div class="card-header">
+
+                            <div class="card-icon magnitude-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h3 class="card-title">Peak Magnitude</h3>
+                        </div> 
+
+                        <div class="card-body">
+                            <div class="big-stat" id="peak-magnitude">
+                                <span class="stat-number">--</span>
+                                <span class="stat-label">Today's Highest</span>
+                            </div>
+                            <p class="stat-description" id="peak-location">Loading...</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="controls-section">
+                <div class="controls-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-filter"></i>Filter Earthquake
+                    </h2>
+                    <div class="view-toggle" role="group" aria-label="view options">
+                        <button class="view-btn active" data-view="list" aria-pressed="true">
+                            <i class="fas fa-list"></i>List
+                        </button>
+                        <button class="view-btn" data-view="map" aria-pressed="false">
+                            <i class="fas fa-map"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="filters-wrapper">
+
+                    <div class="filter-group">
+                        <label for="magnitude-filter" class="filter-label">
+                            <i class="fas fa-gauge-high"></i>Minimum Magnitude
+                        </label>
+
+                        <select name="magnitude-filter" id="magnitude-filter" class="filter-select">
+                            <option value="0">All Earthquakes</option>
+                            <option value="2.5" selected>2.5+ (felt)</option>
+                            <option value="4">4.0+  (Light Damage)</option>
+                            <option value="5">5.0+ (Moderate)</option>
+                            <option value="6">6.0+  (Strong)</option>
+                            <option value="7">7.0+   (Major)</option>
+                        </select> 
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="time-filter" class="filter-label">
+                            <i class="fas fa-calendar"></i>Time Period
+                        </label>
+                        <select name="time-filter" id="time-filter" class="filter-select">
+                            <option value="hour">Last Hour</option>
+                            <option value="day" selected>Last 24 Hours</option>
+                            <option value="week">Last Week</option>
+                            <option value="month">Last Month</option>
+                        </select> 
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="sort-filter" class="filter-label">
+                            <i class="fas fa-sort"></i>Sort By
+                        </label>
+                        <select name="sort-filter" id="sort-filter" class="filter-select">
+                            <option value="time">Most Recent</option>
+                            <option value="magnitude">Highest Magnitude</option>
+                            <option value="depth">Depth</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group search-group">
+                        <label for="search-filter" class="filter-label">
+                            <i class="fas fa-magnifying-glass"></i>Search Location
+                        </label>
+                        <input type="text" class="filter-input" id="search-filter" placeholder="e.g., California, Japan..." aria-label="Search earthquake locations">
+
+                    </div>
+                </div>
+            </section>
+
+            <section class="earthquake-section" aria-labelledby="earthquake-heading">
+                <div class="section-header">
+                    <h2 class="section-title" id="earthquake-heading">
+                        <i class="fas fa-earth-americas"></i>Recent Earthquakes
+                    </h2> 
+
+                    <span class="results-count" id="results-count">Showing <strong>0</strong> results</span>
+
+
+                </div>
+
+                <div class="earthquake-list" id="earthquake-list">
+                    <div class="loading-skeleton">
+                        <div class="skeleton-card"></div>
+                        <div class="skeleton-card"></div>
+                        <div class="skeleton-card"></div>
+                    </div>
+                </div>
+
+                <div class="load-more-container hidden" id="load-more-container">
+                    <button id="load-more-btn" class="btn btn-secondary btn-large">
+                        <i class="fas fa-chevron-down"></i>Load More Earthquakes
+                    </button>
+                </div>
+
+                <div class="no-results hidden" id="no-results">
+                    <div class="no-results-icon">
+                        <i class="fas fa-magnifying-glass"></i>
+                    </div>
+                    <h3>No Earthquakes Found</h3>
+                    <p>Try adjusting your filters or search criteria</p>
+                </div>
+            </section>
+
+            <section class="map-section hidden" id="map-view" aria-labelledby="map-heading">
+                <h2 id="map-heading" class="section-title">
+                    <i class="fas fa-globe"></i>Global Distribution
+                </h2>
+
+                <div class="map-container">
+                    <div id="earthquake-map" class="earthquake-map">
+
+                        <div class="map-legend">
+                            <h4>Magnitude Scale</h4>
+                            <div class="legend-item">
+                                <span class="legend-dot magnitude-low"></span>
+                                <span>2.5 - 4.4</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-dot magnitude-medium"></span>
+                                <span>4.5 - 5.9</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-dot magnitude-high"></span>
+                                <span>6.0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+      </main>
+
+        <footer class="footer" role="contentinfo">
+            <div class="container">
+                    
+                    <div class="footer-section">
+                        <h3 class="footer-title">DisasterWatch</h3>
+                        <p class="footer-description">
+                            Real-time disaster monitoring using open data from USGS and Open-Meteo.
+                            Built to help communities stay informed and prepared.
+                        </p>
+                    </div>
+                      <div class="footer-section">
+                        <h4 class="footer-subtitle">Data Sources</h4>
+                        <ul class="footer-links">
+                            <li><a href="https://earthquake.usgs.gov/" target="_blank" rel="noopener">USGS Earthquake Hazards Program</a></li>
+                            <li><a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo Weather API</a></li>
+                        </ul>
+                    </div>
+
+                      <div class="footer-section">
+                        <h4 class="footer-subtitle">Project</h4>
+                        <ul class="footer-links">
+                            <li><a href="https://github.com/DINESHTM07" target="_blank" rel="noopener">
+                                <i class="fab fa-github"></i> View Source Code
+                            </a></li>
+                            <li><a href="https://linkedin.com/in/dineshcreativedev/" target="_blank" rel="noopener">
+                                <i class="fab fa-linkedin"></i> Connect on LinkedIn
+                            </a></li>
+                            <li><a href="https://x.com/DINRAEUS" target="_blank" rel="noopener">
+                                <i class="fab fa-x-twitter"></i> X / Twitter
+                            </a></li>
+                        </ul>
+
+                        <div class="footer-social" aria-label="Contact links">
+                            <a href="mailto:duke02101@gmail.com"><i class="fas fa-envelope"></i> Email</a>
+                            <a href="contact.html"><i class="fas fa-comment-dots"></i> Contact</a>
+                        </div>
+                    </div>
+
+                     <div class="footer-bottom">
+                    <p>&copy; 2025 DisasterWatch. Built by <strong>DINESH SENTHILKUMAR</strong></p>
+                    <p class="footer-meta">
+                        Data updates every 5 minutes • 
+                        <a href="#" id="privacy-link">Privacy</a> • 
+                        <a href="#" id="terms-link">Terms</a>
+                    </p>
+                </div>
+            </div>
+        </footer>
+
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+    <div id="earthquake-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title" class="modal-title">Earthquake Details</h3>
+                <button class="modal-close" aria-label="Close modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+             <div class="modal-body" id="modal-body">
+            </div>
+        </div>
+    </div>
+
+
+    <script src="js/config.js"></script>      
+    <script src="js/utils.js"></script>       
+    <script src="js/api.js"></script>       
+    <script src="js/app.js"></script>         
+
+
+    </div>
+  </body>
+</html>

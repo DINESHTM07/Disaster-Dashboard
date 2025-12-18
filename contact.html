@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Contact — DisasterWatch</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <link rel="stylesheet" href="css/contact.css" />
+  </head>
+
+  <body>
+    <!-- Header -->
+    <header class="site-header">
+      <div class="container header-inner">
+        <div class="brand">
+          <i class="fas fa-satellite-dish brand-icon"></i>
+          <span class="brand-name">DisasterWatch</span>
+        </div>
+
+        <nav class="nav">
+          <a href="index.html" class="nav-link">Home</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main -->
+    <main class="container">
+      <section class="contact">
+        <header class="contact-header">
+          <h1>Contact</h1>
+          <p>
+            For partnerships, press inquiries, or professional collaborations,
+            reach out using the form or via email and social platforms. Typical
+            response time is within 48 business hours.
+          </p>
+        </header>
+
+        <div class="contact-layout">
+          <!-- Contact Info -->
+          <aside class="contact-card">
+            <h2>Get in touch</h2>
+            <p class="card-intro">
+              Prefer email for project briefs. Include a short summary,
+              timeline, and budget if available.
+            </p>
+
+            <ul class="contact-list">
+              <li>
+                <i class="fas fa-envelope"></i>
+                <div>
+                  <span>Email</span>
+                  <a href="mailto:duke02101@gmail.com">duke02101@gmail.com</a>
+                </div>
+              </li>
+
+              <li>
+                <i class="fab fa-linkedin"></i>
+                <div>
+                  <span>LinkedIn</span>
+                  <a
+                    href="https://www.linkedin.com/in/dineshcreativedev/"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    linkedin.com/in/dineshcreativedev
+                  </a>
+                </div>
+              </li>
+
+              <li>
+                <i class="fab fa-github"></i>
+                <div>
+                  <span>GitHub</span>
+                  <a
+                    href="https://github.com/DINESHTM07"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    github.com/DINESHTM07
+                  </a>
+                </div>
+              </li>
+
+              <li>
+                <i class="fab fa-x-twitter"></i>
+                <div>
+                  <span>X</span>
+                  <a
+                    href="https://x.com/DINRAEUS"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    x.com/DINRAEUS
+                  </a>
+                </div>
+              </li>
+            </ul>
+
+            <p class="privacy-note">
+              Privacy note: Your message and contact details will not be shared
+              or sold. This page is intended for professional outreach only.
+            </p>
+          </aside>
+
+          <!-- Form -->
+          <form
+            class="contact-form"
+            onsubmit="event.preventDefault(); alert('Thanks — form submission simulated.')"
+          >
+            <div class="form-group">
+              <label for="name">Your name</label>
+              <input
+                id="name"
+                type="text"
+                placeholder="Your full name"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email address</label>
+              <input
+                id="email"
+                type="email"
+                placeholder="you@company.com"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="subject">Subject</label>
+              <input id="subject" type="text" placeholder="Brief subject" />
+            </div>
+
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea
+                id="message"
+                rows="5"
+                placeholder="Tell me about your need..."
+                required
+              ></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button class="btn-primary" type="submit">Send Message</button>
+              <a class="btn-secondary" href="mailto:duke02101@gmail.com"
+                >Email directly</a
+              >
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <p>
+          © 2025 DisasterWatch. Built by <strong>DINESH SENTHILKUMAR</strong>
+        </p>
+        <nav class="footer-links">
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>
